@@ -2,27 +2,50 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Scoped CSS variables and JS</title>
+  <title>Scoped CSS Variables and JS</title>
 </head>
 <body>
-  <h2>Update CSS variables with <span class="h1">JS</span> </h2>
+  <h2>Update CSS Variables with <span class='hl'>JS</span></h2>
 
-<div class="controls">
-  <label for="spacing">Spacing:</label>
-  <input id="spacing" type="range" name="spacing" min="10" max="200" value="10" data-sizing ="px">
+  <div class="controls">
+    <label for="spacing">Spacing:</label>
+    <input id="spacing" type="range" name="spacing" min="10" max="200" value="10" data-sizing="px">
+    <!-- data-something is a tag for storing a relevant info when you don't have a tag for that. data-sizing "px" is for the JS function to know what is the "metrics" behind the effects -->
 
-  <label for="blur">Blur:</label>
-  <input id="blur" type="range" name="blur" min="0" max="25" value="10" data-sizing ="px">
 
-  <label for="base">Base color:</label>
-  <input id="base" type="color" name="base" value="#ffc600">
+    <label for="blur">Blur:</label>
+    <input id="blur" type="range" name="blur" min="0" max="25" value="10" data-sizing="px">
+
+    <label for="base">Base Color</label>
+    <input id="base" type="color" name="base" value="#ffc600">
+  </div>
+
+  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLM502-_DBChSJ0J5vR_k2IZTADR3lqqbI4qycYTLEE2np9uFy&s">
 
   <style>
+    :root {
+      --base: #ffc600; /*spacing, base is a variable #ffc600 is its default value*/
+      --spacing: 10px;
+      --blur: 10px;
+    }
+
+    img {
+      padding: var(--spacing); /*var(--variable) is how you call it*/
+      background: var(--base);
+      filter: blur(var(--blur));
+    }
+
+    .hl {
+      color: var(--base);
+    }
+
+    /*
+      misc styles, nothing to do with CSS variables
+    */
+
     body {
       text-align: center;
-      background: url("https://images.pexels.com/photos/35061/travel-morocco-erfoud-sand-dune.jpg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940") center;;
-      background-size: cover;
-
+      background: url('https://images.pexels.com/photos/35061/travel-morocco-erfoud-sand-dune.jpg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940') center no-repeat;
       color: white;
       font-family: 'helvetica neue', sans-serif;
       font-weight: 100;
@@ -38,7 +61,18 @@
     }
   </style>
 
-</div>
+  <script>
+    const inputs = document.querySelectorAll('.controls input');  /*this give us a node list (sort of an array)*/
+
+    function handleUpdate() {
+      const suffix = this.dataset.sizing || ''; /*this || "" is to avoid 'not found' message if it is empty or non existing PS: suffix variable refers to PX = pixels when it is present*/
+      document.documentElement.style.setProperty(`--${this.name}`, this.value + suffix);
+    }
+
+    inputs.forEach(input => input.addEventListener('change', handleUpdate));
+    inputs.forEach(input => input.addEventListener('mousemove', handleUpdate));
+  </script>
+
 
 </body>
 </html>
